@@ -36,6 +36,21 @@ void echo_low()
 	*echo_ok = true;
 }
 
+class interrupt_guard
+{
+public:
+	interrupt_guard(InterruptIn &ii) : ii_(ii)
+	{
+		ii.disable_irq();
+	}
+	~interrupt_guard()
+	{
+		ii_.enable_irq();
+	}
+private:
+	InterruptIn &ii_;
+};
+
  
 int main()
 {
@@ -48,9 +63,15 @@ int main()
 //Loop to read Sonar distance values, scale, and print
     while(1) {
 // trigger sonar to send a ping
-        trigger = 1;
-        wait_us(10.0);
-        trigger = 0;
+    	{
+    		interrupt_guard g1(echo1);
+    		interrupt_guard g2(echo2);
+
+	        trigger = 1;
+	        wait_us(10.0);
+	        trigger = 0;
+	        wait_us(50.0);
+	    }
 
         wait(0.2);
 
