@@ -47,7 +47,7 @@ int main()
 //subtract software overhead timer delay and scale to cm
         distance = (sonar.read_us()-correction)/58.0;
         myled2 = 0;
-        pc.printf(" %d cm \n\r",distance);
+        pc.printf(" %d cm \n\r",sonar.read_us());
 //wait so that any echo(s) return before sending another ping
         wait(0.2);
     }
